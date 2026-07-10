@@ -1,0 +1,58 @@
+axes.spines.top    : False
+axes.spines.right  : False
+font.size          : 9
+
+savefig.dpi : 300
+savefig.bbox : tight
+savefig.pad_inches : 0.1
+savefig.facecolor : none
+
+
+# axes
+# Tableau10 colors
+axes.prop_cycle: cycler('color', ['1f77b4', 'ff7f0e', '2ca02c', 'd62728', '9467bd', '8c564b', 'e377c2', '7f7f7f', 'bcbd22', '17becf'])
+axes.grid: False
+axes.labelpad: 3.0
+axes.linewidth: 1.0
+axes.axisbelow: True
+axes.labelsize: medium
+axes.titlesize: medium
+
+# ticks
+xtick.direction: out
+ytick.direction: out
+xtick.major.pad: 3.0
+ytick.major.pad: 3.0
+xtick.major.size: 0
+ytick.major.size: 0
+xtick.minor.size: 0
+ytick.minor.size: 0
+xtick.major.width: 0.8
+ytick.major.width: 0.8
+xtick.minor.width: 0.4
+ytick.minor.width: 0.4
+xtick.labelsize: small
+ytick.labelsize: small
+
+# legend
+legend.fontsize: medium
+legend.frameon: False
+legend.numpoints: 1
+legend.scatterpoints: 1
+legend.columnspacing: 1.0
+legend.handletextpad: 0.5
+legend.handlelength: 1.5
+
+# grid
+grid.linewidth: 0.8
+grid.color: .8
+grid.linestyle: -
+
+# lines
+lines.linewidth: 1.4
+lines.markersize: 4
+lines.markeredgewidth: 0.8
+lines.solid_capstyle: round
+
+# patches
+patch.linewidth: 0.8
