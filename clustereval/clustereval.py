@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.sparse
 import sklearn.metrics.cluster
+from numbers import Real
 from sklearn.utils._param_validation import (
         Interval,
         validate_params,
