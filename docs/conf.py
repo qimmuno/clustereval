@@ -37,4 +37,4 @@ autodoc_member_order = "bysource"
 napoleon_google_docstring = False
 napoleon_numpy_docstring = True
 
-html_theme = "alabaster"
+html_theme = "sphinx_rtd_theme"
