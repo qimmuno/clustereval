@@ -6,6 +6,8 @@ from .core import (
 	inverse_purity_score,
 	normalized_purity_score,
 	normalized_inverse_purity_score,
+    pair_specificity_score,
+    pair_sensitivity_score,
 	completeness_score,
 	conditional_entropies,
 )
@@ -23,6 +25,8 @@ __all__ = [
 	"inverse_purity_score",
 	"normalized_purity_score",
 	"normalized_inverse_purity_score",
+	"pair_specificity_score",
+    "pair_sensitivity_score",
 	"completeness_score",
 	"conditional_entropies",
 ]

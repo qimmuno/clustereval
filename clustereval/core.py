@@ -383,3 +383,65 @@ def normalized_inverse_purity_score(labels_true, labels_pred):
     if inversed_purity_min == 1.0:
         return 1.0
     return (inverse_purity - inversed_purity_min)/(1.0-inversed_purity_min)
+
+@validate_params(
+    {
+        "labels_true": ["array-like"],
+        "labels_pred": ["array-like"],
+    },
+    prefer_skip_nested_validation=True,
+)
+def pair_specificity_score(labels_true, labels_pred):
+    """Calculate the pair specificity score for a clustering.
+
+    Pair-based evaluation metrics are based on a binary classification of pairs
+    of samples. This score is the specificity of this binary classifier,
+    defined as the true negative rate.
+
+    This score is the pair-based analogue of the homogeneity score.
+
+    Parameters
+    ----------
+    labels_true : array-like of shape (n_samples,)
+        Ground truth class labels to be used as a reference.
+    labels_pred : array-like of shape (n_samples,)
+        Cluster labels to evaluate.
+
+    Returns
+    -------
+    pair_specificity : float
+        The pair specificity score for the clustering.
+    """
+    (tn, fp), (fn, tp) = sklearn.metrics.cluster.pair_confusion_matrix(labels_true, labels_pred)
+    return tn / (tn + fp) if (tn + fp) > 0 else 0
+
+@validate_params(
+    {
+        "labels_true": ["array-like"],
+        "labels_pred": ["array-like"],
+    },
+    prefer_skip_nested_validation=True,
+)
+def pair_sensitivity_score(labels_true, labels_pred):
+    """Calculate the pair sensitivity score for a clustering.
+
+    Pair-based evaluation metrics are based on a binary classification of pairs
+    of samples. This score is the sensitivity of this binary classifier,
+    defined as the true positive rate.
+
+    This score is the pair-based analogue of the parsimony score.
+
+    Parameters
+    ----------
+    labels_true : array-like of shape (n_samples,)
+        Ground truth class labels to be used as a reference.
+    labels_pred : array-like of shape (n_samples,)
+        Cluster labels to evaluate.
+
+    Returns
+    -------
+    pair_sensitivity : float
+        The pair sensitivity score for the clustering.
+    """
+    (tn, fp), (fn, tp) = sklearn.metrics.cluster.pair_confusion_matrix(labels_true, labels_pred)
+    return tp / (tp + fn) if (tp + fn) > 0 else 0
