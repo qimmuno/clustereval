@@ -7,7 +7,7 @@ packages = ["clustereval"]
 
 [project]
 name = "ClusterEval"
-version = "0.1"
+version = "0.2"
 description = "External clustering evaluation"
 readme = "README.md"
 requires-python = ">=3.9"
