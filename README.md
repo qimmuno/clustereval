@@ -21,11 +21,16 @@ The package depends on `numpy` and `scikit-learn`.
 
 ## Documentation and examples
 
-API documentation is hosted on [readthedocs](https://clustereval.readthedocs.io/en/latest/?badge=latest).
-You can also create a local copy of the API documentation by running:
+API documentation is hosted on [readthedocs](https://clustereval.readthedocs.io/en/latest/?badge=latest). Jupyter example notebooks can be found in the `examples` folder.
+
+You can create a local copy of the API documentation in the docs folder by running:
 
 ```bash
 make html
 ```
 
-in the docs folder.
+## Support and contributing
+
+For bug reports and enhancement requests use the [Github issue tool](http://github.com/qimmuno/clustereval/issues/new), or (even better!) open a [pull request](http://github.com/qimmuno/clustereval/pulls) with relevant changes.
+
+When preparing a pull request, please run the testsuite using `pytest` to ensure none of the existing functionality breaks.
