@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import os
 import sys
 from importlib.metadata import PackageNotFoundError, version as package_version
@@ -11,12 +9,7 @@ sys.path.insert(0, os.fspath(ROOT))
 
 project = "ClusterEval"
 author = "Andreas Tiffeau-Mayer"
-
-try:
-    release = package_version("clustereval")
-except PackageNotFoundError:
-    release = "0.1"
-
+release = package_version("clustereval")
 version = release
 
 extensions = [
