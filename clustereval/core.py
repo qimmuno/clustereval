@@ -1,5 +1,4 @@
 import numpy as np
-import scipy.sparse
 import sklearn.metrics.cluster
 from numbers import Real
 from sklearn.utils._param_validation import (
@@ -57,15 +56,7 @@ def conditional_entropies(labels_true, labels_pred):
     entropy_K = _entropy(labels_pred)
 
     contingency = sklearn.metrics.cluster.contingency_matrix(labels_true, labels_pred, sparse=True)
-
-    if isinstance(contingency, np.ndarray):
-        # For an array
-        nzx, nzy = np.nonzero(contingency)
-        nz_val = contingency[nzx, nzy]
-    else:
-        # For a sparse matrix
-        nzx, nzy, nz_val = scipy.sparse.find(contingency)
-
+    nz_val = contingency.data
     nsum = np.sum(nz_val)
     entropy_joint = -np.sum(nz_val * np.log(nz_val))/nsum + np.log(nsum)
 

@@ -29,7 +29,7 @@ classifiers = [
   "Programming Language :: Python :: 3.13",
 ]
 
-dependencies = ["numpy", "scipy", "scikit-learn"]
+dependencies = ["numpy", "scikit-learn"]
 
 [project.urls]
 "Homepage" = "https://github.com/qimmuno/clustereval"
