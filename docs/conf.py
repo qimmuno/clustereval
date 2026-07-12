@@ -32,6 +32,7 @@ autodoc_default_options = {
     "undoc-members": False,
     "show-inheritance": False,
 }
+autodoc_member_order = "bysource"
 
 napoleon_google_docstring = False
 napoleon_numpy_docstring = True
