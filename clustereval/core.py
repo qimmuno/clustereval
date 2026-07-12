@@ -83,6 +83,19 @@ def conditional_entropies(labels_true, labels_pred):
 def parsimony_score(labels_true, labels_pred):
     """Calculate the parsimony score for a clustering.
     
+    Parsimony asks whether the :math:`N` objects are clustered as simply as
+    possible given the class :math:`C`. Formally, the parsimony score is
+    defined based on the conditional entropy of clusters :math:`K` given
+    classes :math:`C`:
+
+    .. math::
+
+        p(C, K) = 1 - \\frac{H(K|C)}{\\log(N) - H(C)}.
+
+    Parsimony is maximal (:math:`p = 1`) when all class members share
+    an identical cluster label, and minimal (:math:`p = 0`) when the
+    clustering fully fragments each class. 
+
     Parameters
     ----------
     labels_true : array-like of shape (n_samples,)
@@ -110,7 +123,18 @@ def parsimony_score(labels_true, labels_pred):
 )
 def homogeneity_score(labels_true, labels_pred):
     """Calculate the homogeneity score for a clustering.
+
+    Homogeneity asks whether class members :math:`C` are assigned to the same
+    cluster :math:`K`. Homogeneity is defined as
+
+    .. math::
+
+        h(C, K) = 1 - \\frac{H(C|K)}{H(C)}
     
+    Homogeneity is maximal (:math:`h = 1`) when all members of a cluster share
+    the same class label, and minimal (:math:`h = 0`) when cluster assignments
+    provide no information about the classes.
+        
     Parameters
     ----------
     labels_true : array-like of shape (n_samples,)
@@ -139,6 +163,16 @@ def homogeneity_score(labels_true, labels_pred):
 def completeness_score(labels_true, labels_pred):
     """Calculate the completeness score for a clustering.
     
+    Completeness like parsimony penalizes clustering that fragment classes.
+    However, completeness uses a normalization that depends on the entropy 
+    of the specific clustering under evaluation :math:`H(K)` rather than 
+    its maximum over all possible clusterings :math:`\\log(N) - H(C)`.
+    Formally, completeness is defined as
+
+    .. math::
+
+        c(C, K) = 1 - \\frac{H(K|C)}{H(K)}
+
     Parameters
     ----------
     labels_true : array-like of shape (n_samples,)
@@ -168,8 +202,20 @@ def q_measure_score(labels_true, labels_pred, *, beta=1.0):
     """Calculate the Q-measure for a clustering.
 
     The Q-measure is defined as the weighted harmonic mean of the 
-    normalized ``homogeneity`` and ``parsimony`` scores.
+    normalized ``homogeneity`` and ``parsimony`` scores:
+
+    .. math::
+        Q_\\beta(C, K) = \\frac{(1 + \\beta) h p}{\\beta h + p}
     
+    As a harmonic mean, the Q-measure is sensitive to low values in either
+    ``homogeneity`` or ``parsimony``. The weight parameter ``beta`` controls
+    the relative importance of ``homogeneity`` vs ``parsimony``. Larger
+    ``beta`` puts greater weight on ``parsimony``. The Q-measure is maximal
+    (:math:`Q_\\beta = 1`) for clusterings that perfectly recover the class
+    partition, and minimal (:math:`Q_\\beta = 0`) when either the clustering
+    is completely uninformative about the classes or when the clustering
+    fully fragments each class.
+        
     Parameters
     ----------
     labels_true : array-like of shape (n_samples,)
@@ -210,6 +256,13 @@ def purity_score(labels_true, labels_pred):
     This score is the set-matching analogue of 
     class-conditional clustering entropy.
 
+    When :math:`C` is the class partition and :math:`K` is the clustering, the
+    purity score is defined as:
+
+    .. math::
+        \\mathrm{purity}(C, K) = \\frac{1}{N} \sum_k \\max_c \\left| C_c \\cap K_k \\right|
+
+
     Parameters
     ----------
     labels_true : array-like of shape (n_samples,)
@@ -240,6 +293,12 @@ def purity_score(labels_true, labels_pred):
 def normalized_purity_score(labels_true, labels_pred):
     """Calculate the normalized purity score for a clustering.
     
+    This is a min-max normalized version of the purity score,
+    which is defined as:
+
+    .. math::
+        \\text{norm. purity} = \\frac{\\mathrm{purity}(C, K) - \\max_c P(c)}{1-\\max_c P(c)}
+
     Parameters
     ----------
     labels_true : array-like of shape (n_samples,)
@@ -268,6 +327,12 @@ def normalized_purity_score(labels_true, labels_pred):
 )
 def inverse_purity_score(labels_true, labels_pred):
     """Calculate the inverse purity score for a clustering.
+
+    When :math:`C` is the class partition and :math:`K` is the clustering, the
+    inverse purity score is defined as:
+
+    .. math::
+        \\mathrm{inv\\text{-}purity}(C, K) = \\frac{1}{N} \sum_c \\max_k \\left| C_c \\cap K_k \\right|
     
     Parameters
     ----------
@@ -294,6 +359,13 @@ def inverse_purity_score(labels_true, labels_pred):
 def normalized_inverse_purity_score(labels_true, labels_pred):
     """Calculate the normalized inverse purity score for a clustering.
     
+
+    This is a min-max normalized version of the inversepurity score,
+    which is defined as:
+
+    .. math::
+        \\text{norm. inv. purity} = \\frac{\\mathrm{inv.\\text{-}purity}(C, K) - |\\mathcal{C}|/N}{1-|\\mathcal{C}|/N}
+
     Parameters
     ----------
     labels_true : array-like of shape (n_samples,)
