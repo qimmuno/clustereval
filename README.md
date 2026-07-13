@@ -37,6 +37,8 @@ You can create a local copy of the API documentation in the docs folder by runni
 make html
 ```
 
+All metrics require non-empty label arrays of equal length and raise `ValueError` otherwise.
+
 ## Support and contributing
 
 For bug reports and enhancement requests use the [Github issue tool](http://github.com/qimmuno/clustereval/issues/new), or (even better!) open a [pull request](http://github.com/qimmuno/clustereval/pulls) with relevant changes.
