@@ -11,6 +11,8 @@ from clustereval import (
     pair_specificity_score,
     pair_sensitivity_score,
     q_measure_score,
+    completeness_score,
+    conditional_entropies,
 )
 
 
@@ -118,3 +120,60 @@ def test_degenerate_input():
 
     with pytest.raises(ValueError):
         q_measure_score([], [])
+
+
+@pytest.mark.parametrize(
+    "metric",
+    [
+        homogeneity_score,
+        inverse_purity_score,
+        normalized_inverse_purity_score,
+        normalized_purity_score,
+        parsimony_score,
+        pair_sensitivity_score,
+        pair_specificity_score,
+        purity_score,
+        q_measure_score,
+        conditional_entropies,
+        completeness_score,
+    ],
+)
+def test_metrics_are_invariant_to_label_renaming(metric):
+    labels_true = [0, 0, 1, 1, 2, 2]
+    labels_predicted = [10, 10, 10, 20, 20, 30]
+
+    renamed_true = [7, 7, 3, 3, 9, 9]
+    renamed_predicted = [100, 100, 100, 200, 200, 300]
+
+    assert metric(labels_true, labels_predicted) == pytest.approx(
+        metric(renamed_true, renamed_predicted)
+    )
+
+
+@pytest.mark.parametrize(
+    "metric",
+    [
+        conditional_entropies,
+        completeness_score,
+        homogeneity_score,
+        inverse_purity_score,
+        normalized_inverse_purity_score,
+        normalized_purity_score,
+        parsimony_score,
+        pair_sensitivity_score,
+        pair_specificity_score,
+        purity_score,
+        q_measure_score,
+    ],
+)
+def test_metrics_are_invariant_to_sample_order(metric):
+    labels_true = [0, 0, 1, 1, 2, 2]
+    labels_predicted = [10, 10, 10, 20, 20, 30]
+    sample_permutation = [4, 2, 0, 5, 3, 1]
+
+    permuted_true = [labels_true[index] for index in sample_permutation]
+    permuted_predicted = [labels_predicted[index] for index in sample_permutation]
+
+    assert metric(labels_true, labels_predicted) == pytest.approx(
+        metric(permuted_true, permuted_predicted)
+    )
