@@ -92,6 +92,56 @@ def conditional_entropies(labels_true, labels_pred):
     },
     prefer_skip_nested_validation=True,
 )
+def homogeneity_score(labels_true, labels_pred):
+    """Calculate the homogeneity score for a clustering.
+
+    Homogeneity asks whether class members :math:`C` are assigned to the same
+    cluster :math:`K`. Homogeneity is defined as
+
+    .. math::
+
+        h(C, K) = 1 - \\frac{H(C|K)}{H(C)}
+    
+    Homogeneity is maximal (:math:`h = 1`) when all members of a cluster share
+    the same class label, and minimal (:math:`h = 0`) when cluster assignments
+    provide no information about the classes.
+        
+    Parameters
+    ----------
+    labels_true : array-like of shape (n_samples,)
+        Ground truth class labels to be used as a reference.
+    labels_pred : array-like of shape (n_samples,)
+        Cluster labels to evaluate.
+
+    Returns
+    -------
+    homogeneity : float
+        The homogeneity score for the clustering.
+
+    Raises
+    ------
+    ValueError
+        If the two label arrays have different lengths or are empty.
+    
+    See Also
+    --------
+    parsimony_score : Parsimony of clustering relative to class partition
+    """
+    _validate_clusterings(labels_true, labels_pred)
+    entropy_joint, entropy_CK, entropy_KC, entropy_C, entropy_K = conditional_entropies(labels_true, labels_pred)
+
+    if entropy_C == 0:
+        return 1.0
+    return 1-entropy_CK/entropy_C
+
+
+@validate_params(
+    {
+        "labels_true": ["array-like"],
+        "labels_pred": ["array-like"],
+    },
+    prefer_skip_nested_validation=True,
+)
 def parsimony_score(labels_true, labels_pred):
     """Calculate the parsimony score for a clustering.
     
@@ -124,6 +174,13 @@ def parsimony_score(labels_true, labels_pred):
     ------
     ValueError
         If the two label arrays have different lengths or are empty.
+
+    See Also
+    --------
+    homogeneity_score : Homogeneity of clustering relative to class partition
+    completeness_score : Completeness is a closely related score,  which
+        depends on the entropy of the clustering under evaluation rather
+        than its maximum over all possible clusterings.
     """
     _validate_clusterings(labels_true, labels_pred)
     entropy_joint, entropy_CK, entropy_KC, entropy_C, entropy_K = conditional_entropies(labels_true, labels_pred)
@@ -132,50 +189,6 @@ def parsimony_score(labels_true, labels_pred):
         return 1.0
     return 1-entropy_KC/denominator
 
-@validate_params(
-    {
-        "labels_true": ["array-like"],
-        "labels_pred": ["array-like"],
-    },
-    prefer_skip_nested_validation=True,
-)
-def homogeneity_score(labels_true, labels_pred):
-    """Calculate the homogeneity score for a clustering.
-
-    Homogeneity asks whether class members :math:`C` are assigned to the same
-    cluster :math:`K`. Homogeneity is defined as
-
-    .. math::
-
-        h(C, K) = 1 - \\frac{H(C|K)}{H(C)}
-    
-    Homogeneity is maximal (:math:`h = 1`) when all members of a cluster share
-    the same class label, and minimal (:math:`h = 0`) when cluster assignments
-    provide no information about the classes.
-        
-    Parameters
-    ----------
-    labels_true : array-like of shape (n_samples,)
-        Ground truth class labels to be used as a reference.
-    labels_pred : array-like of shape (n_samples,)
-        Cluster labels to evaluate.
-
-    Returns
-    -------
-    homogeneity : float
-        The homogeneity score for the clustering.
-
-    Raises
-    ------
-    ValueError
-        If the two label arrays have different lengths or are empty.
-    """
-    _validate_clusterings(labels_true, labels_pred)
-    entropy_joint, entropy_CK, entropy_KC, entropy_C, entropy_K = conditional_entropies(labels_true, labels_pred)
-
-    if entropy_C == 0:
-        return 1.0
-    return 1-entropy_CK/entropy_C
 
 @validate_params(
     {
@@ -213,6 +226,12 @@ def completeness_score(labels_true, labels_pred):
     ------
     ValueError
         If the two label arrays have different lengths or are empty.
+    
+    See Also
+    --------
+    parsimony_score : Related score that uses a normalization based 
+        on the maximum possible entropy across all possible clusterings, 
+        which behaves more intuitively under refinement.
     """
     _validate_clusterings(labels_true, labels_pred)
     entropy_joint, entropy_CK, entropy_KC, entropy_C, entropy_K = conditional_entropies(labels_true, labels_pred)
@@ -289,8 +308,8 @@ def q_measure_score(labels_true, labels_pred, *, beta=1.0):
 def purity_score(labels_true, labels_pred):
     """Calculate the purity score for a clustering.
 
-    This score is the set-matching analogue of 
-    class-conditional clustering entropy.
+    This score is the set-matching analogue of class-conditional clustering
+    entropy.
 
     When :math:`C` is the class partition and :math:`K` is the clustering, the
     purity score is defined as:
@@ -319,7 +338,6 @@ def purity_score(labels_true, labels_pred):
     See Also
     --------
     normalized_purity_score : Purity normalized to [0, 1]
-    inverse_purity_score : Corresponding score equivalent to parsimony
     """
     _validate_clusterings(labels_true, labels_pred)
     contingency_matrix = sklearn.metrics.cluster.contingency_matrix(labels_true, labels_pred)
@@ -398,6 +416,10 @@ def inverse_purity_score(labels_true, labels_pred):
     ------
     ValueError
         If the two label arrays have different lengths or are empty.
+    
+    See Also
+    --------
+    normalized_inverse_purity_score : Inverse purity normalized to [0, 1].
     """
     _validate_clusterings(labels_true, labels_pred)
     contingency_matrix = sklearn.metrics.cluster.contingency_matrix(labels_true, labels_pred)
