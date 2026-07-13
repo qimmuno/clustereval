@@ -125,6 +125,27 @@ def test_degenerate_input():
 @pytest.mark.parametrize(
     "metric",
     [
+        conditional_entropies,
+        completeness_score,
+        homogeneity_score,
+        inverse_purity_score,
+        normalized_inverse_purity_score,
+        normalized_purity_score,
+        parsimony_score,
+        pair_sensitivity_score,
+        pair_specificity_score,
+        purity_score,
+        q_measure_score,
+    ],
+)
+def test_mismatched_length_input(metric):
+    with pytest.raises(ValueError):
+        metric([0, 0, 1], [1, 1])
+
+
+@pytest.mark.parametrize(
+    "metric",
+    [
         homogeneity_score,
         inverse_purity_score,
         normalized_inverse_purity_score,
