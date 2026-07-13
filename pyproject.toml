@@ -31,6 +31,9 @@ classifiers = [
 
 dependencies = ["numpy", "scikit-learn"]
 
+[project.optional-dependencies]
+test = ["pytest"]
+
 [project.urls]
 "Homepage" = "https://github.com/qimmuno/clustereval"
 "Bug Reports" = "https://github.com/qimmuno/clustereval/issues"
