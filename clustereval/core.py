@@ -309,13 +309,13 @@ def purity_score(labels_true, labels_pred):
     """Calculate the purity score for a clustering.
 
     This score is the set-matching analogue of class-conditional clustering
-    entropy.
+        entropy.
 
     When :math:`C` is the class partition and :math:`K` is the clustering, the
     purity score is defined as:
 
     .. math::
-        \\mathrm{purity}(C, K) = \\frac{1}{N} \sum_k \\max_c \\left| C_c \\cap K_k \\right|
+        \\mathrm{purity}(C, K) = \\frac{1}{N} \\sum_k \\max_c \\left| C_c \\cap K_k \\right|
 
 
     Parameters
