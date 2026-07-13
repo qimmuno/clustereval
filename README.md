@@ -29,7 +29,7 @@ The package depends on `numpy` and `scikit-learn`.
 
 ## Documentation and examples
 
-API documentation is hosted on [readthedocs](https://clustereval.readthedocs.io/en/latest/?badge=latest). Jupyter example notebooks can be found in the `examples` folder.
+API documentation is provided through docstrings. Jupyter example notebooks can be found in the `examples` folder.
 
 You can create a local copy of the API documentation in the docs folder by running:
 

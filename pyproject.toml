@@ -33,6 +33,11 @@ dependencies = ["numpy", "scikit-learn"]
 
 [project.optional-dependencies]
 test = ["pytest"]
+docs = [
+    "sphinx",
+    "sphinx-rtd-theme",
+    "myst-parser",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/qimmuno/clustereval"
