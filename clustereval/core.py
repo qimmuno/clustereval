@@ -6,6 +6,23 @@ from sklearn.utils._param_validation import (
         validate_params,
     )
 
+def _validate_clusterings(labels_true, labels_pred):
+    """Validate the input partitions.
+
+    Raises ValueError if the partitions have different lengths or are empty.
+
+    Parameters
+    ----------
+    labels_true : array-like of shape (n_samples,)
+        Ground truth class labels to be used as a reference.
+    labels_pred : array-like of shape (n_samples,)
+        Cluster labels to evaluate.
+    """
+    if len(labels_true) != len(labels_pred):
+        raise ValueError("The two clusterings must have the same number of samples.")
+    
+    if len(labels_true) == 0:
+        raise ValueError("The clusterings must not be empty.")
 
 def _entropy(labels):
     """Calculate the entropy for a labeling.
@@ -24,9 +41,7 @@ def _entropy(labels):
     -----
     The logarithm used is the natural logarithm (base-e).
     """
-    if len(labels) == 0:
-        return 1.0
-
+    
     pi = np.unique(labels, return_counts=True, equal_nan=False)[1].astype(np.float64)
     pi /= np.sum(pi)
 
@@ -49,8 +64,14 @@ def conditional_entropies(labels_true, labels_pred):
     Returns
     -------
     entropy_joint, entropy_CK, entropy_KC, entropy_C, entropy_K
+
+    Raises
+    ------
+    ValueError
+        If the two label arrays have different lengths or are empty.
     """
 
+    _validate_clusterings(labels_true, labels_pred)
 
     entropy_C = _entropy(labels_true)
     entropy_K = _entropy(labels_pred)
@@ -98,7 +119,13 @@ def parsimony_score(labels_true, labels_pred):
     -------
     parsimony : float
         The parsimony score for the clustering.
+
+    Raises
+    ------
+    ValueError
+        If the two label arrays have different lengths or are empty.
     """
+    _validate_clusterings(labels_true, labels_pred)
     entropy_joint, entropy_CK, entropy_KC, entropy_C, entropy_K = conditional_entropies(labels_true, labels_pred)
     denominator = np.log(len(labels_true))-entropy_C
     if denominator == 0:
@@ -137,7 +164,13 @@ def homogeneity_score(labels_true, labels_pred):
     -------
     homogeneity : float
         The homogeneity score for the clustering.
+
+    Raises
+    ------
+    ValueError
+        If the two label arrays have different lengths or are empty.
     """
+    _validate_clusterings(labels_true, labels_pred)
     entropy_joint, entropy_CK, entropy_KC, entropy_C, entropy_K = conditional_entropies(labels_true, labels_pred)
 
     if entropy_C == 0:
@@ -175,7 +208,13 @@ def completeness_score(labels_true, labels_pred):
     -------
     completeness : float
         The completeness score for the clustering.
+
+    Raises
+    ------
+    ValueError
+        If the two label arrays have different lengths or are empty.
     """
+    _validate_clusterings(labels_true, labels_pred)
     entropy_joint, entropy_CK, entropy_KC, entropy_C, entropy_K = conditional_entropies(labels_true, labels_pred)
     if entropy_K == 0:
         return 1.0
@@ -223,11 +262,17 @@ def q_measure_score(labels_true, labels_pred, *, beta=1.0):
     q_measure : float
         The Q-measure for the clustering.
 
+    Raises
+    ------
+    ValueError
+        If the two label arrays have different lengths or are empty.
+
     See Also
     --------
     homogeneity_score : Homogeneity of clustering relative to class partition
     parsimony_score : Parsimony of clustering relative to class partition
     """
+    _validate_clusterings(labels_true, labels_pred)
     h = homogeneity_score(labels_true, labels_pred)
     p = parsimony_score(labels_true, labels_pred)
     if h <= 0.0 or p <= 0.0:
@@ -266,11 +311,17 @@ def purity_score(labels_true, labels_pred):
     purity : float
         The purity score for the clustering.
 
+    Raises
+    ------
+    ValueError
+        If the two label arrays have different lengths or are empty.
+
     See Also
     --------
     normalized_purity_score : Purity normalized to [0, 1]
     inverse_purity_score : Corresponding score equivalent to parsimony
     """
+    _validate_clusterings(labels_true, labels_pred)
     contingency_matrix = sklearn.metrics.cluster.contingency_matrix(labels_true, labels_pred)
     return np.sum(np.amax(contingency_matrix, axis=0)) / np.sum(contingency_matrix)
 
@@ -301,7 +352,13 @@ def normalized_purity_score(labels_true, labels_pred):
     -------
     normalized_purity : float
         The normalized purity score for the clustering.
+
+    Raises
+    ------
+    ValueError
+        If the two label arrays have different lengths or are empty.
     """
+    _validate_clusterings(labels_true, labels_pred)
     purity = purity_score(labels_true, labels_pred)
     contingency_matrix = sklearn.metrics.cluster.contingency_matrix(labels_true, labels_pred)
     purity_min = np.amax(np.sum(contingency_matrix, axis=1)) / np.sum(contingency_matrix)
@@ -336,7 +393,13 @@ def inverse_purity_score(labels_true, labels_pred):
     -------
     inverse_purity : float
         The inverse purity score for the clustering.
+
+    Raises
+    ------
+    ValueError
+        If the two label arrays have different lengths or are empty.
     """
+    _validate_clusterings(labels_true, labels_pred)
     contingency_matrix = sklearn.metrics.cluster.contingency_matrix(labels_true, labels_pred)
     return np.sum(np.amax(contingency_matrix, axis=1)) / np.sum(contingency_matrix)
 
@@ -368,7 +431,13 @@ def normalized_inverse_purity_score(labels_true, labels_pred):
     -------
     normalized_inverse_purity : float
         The normalized inverse purity score for the clustering.
+
+    Raises
+    ------
+    ValueError
+        If the two label arrays have different lengths or are empty.
     """
+    _validate_clusterings(labels_true, labels_pred)
     inverse_purity = inverse_purity_score(labels_true, labels_pred)
     inversed_purity_min = len(set(labels_true)) / len(labels_true)
     if inversed_purity_min == 1.0:
@@ -402,9 +471,15 @@ def pair_specificity_score(labels_true, labels_pred):
     -------
     pair_specificity : float
         The pair specificity score for the clustering.
+
+    Raises
+    ------
+    ValueError
+        If the two label arrays have different lengths or are empty.
     """
+    _validate_clusterings(labels_true, labels_pred)
     (tn, fp), (fn, tp) = sklearn.metrics.cluster.pair_confusion_matrix(labels_true, labels_pred)
-    return tn / (tn + fp) if (tn + fp) > 0 else 0
+    return tn / (tn + fp) if (tn + fp) > 0 else 1.0
 
 @validate_params(
     {
@@ -433,6 +508,12 @@ def pair_sensitivity_score(labels_true, labels_pred):
     -------
     pair_sensitivity : float
         The pair sensitivity score for the clustering.
+
+    Raises
+    ------
+    ValueError
+        If the two label arrays have different lengths or are empty.
     """
+    _validate_clusterings(labels_true, labels_pred)
     (tn, fp), (fn, tp) = sklearn.metrics.cluster.pair_confusion_matrix(labels_true, labels_pred)
     return tp / (tp + fn) if (tp + fn) > 0 else 0
