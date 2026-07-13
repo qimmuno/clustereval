@@ -1,6 +1,7 @@
 [![License](https://img.shields.io/pypi/l/clustereval.svg)](https://github.com/andim/clustereval/blob/master/LICENSE)
 [![Latest release](https://img.shields.io/pypi/v/clustereval.svg)](https://pypi.python.org/pypi/clustereval)
 [![Documentation Status](https://readthedocs.org/projects/clustereval/badge/?version=latest)](https://clustereval.readthedocs.io/en/latest/?badge=latest)
+[![CI](https://github.com/qimmuno/clustereval/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/qimmuno/clustereval/actions/workflows/ci.yml)
 
 # ClusterEval: External Clustering Validation by the Homogeneity-Parsimony Trade-Off
 
