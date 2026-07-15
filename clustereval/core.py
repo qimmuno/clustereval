@@ -436,11 +436,12 @@ def normalized_inverse_purity_score(labels_true, labels_pred):
     """Calculate the normalized inverse purity score for a clustering.
     
 
-    This is a min-max normalized version of the inversepurity score,
-    which is defined as:
+    This is a min-max normalized version of the inverse purity score. Given
+    the number of unique classes, $L = \\mathrm{supp}(C)$, the normalized score
+    is defined as:
 
     .. math::
-        \\text{norm. inv. purity} = \\frac{\\mathrm{inv.\\text{-}purity}(C, K) - |\\mathcal{C}|/N}{1-|\\mathcal{C}|/N}
+        \\text{norm. inv. purity} = \\frac{\\mathrm{inv.\\text{-}purity}(C, K) - L/N}{1-L|/N}
 
     Parameters
     ----------
