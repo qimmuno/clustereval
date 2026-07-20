@@ -69,6 +69,11 @@ def conditional_entropies(labels_true, labels_pred):
     ------
     ValueError
         If the two label arrays have different lengths or are empty.
+
+    Notes
+    -----
+    The logarithm used is the natural logarithm (base-e), so returns are
+    in units of nats.
     """
 
     _validate_clusterings(labels_true, labels_pred)
