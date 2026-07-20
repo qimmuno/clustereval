@@ -1,6 +1,7 @@
 import numpy as np
 import sklearn.metrics.cluster
 from numbers import Real
+from typing import NamedTuple
 from sklearn.utils._param_validation import (
         Interval,
         validate_params,
@@ -50,6 +51,14 @@ def _entropy(labels):
 
     return -np.sum(pi * np.log(pi))
 
+
+class ConditionalEntropyResult(NamedTuple):
+    joint_entropy: float
+    class_given_cluster_entropy: float
+    cluster_given_class_entropy: float
+    class_entropy: float
+    cluster_entropy: float
+
 def conditional_entropies(labels_true, labels_pred):
     """Calculate conditional entropies between two partitions.
 
@@ -63,7 +72,10 @@ def conditional_entropies(labels_true, labels_pred):
 
     Returns
     -------
-    entropy_joint, entropy_CK, entropy_KC, entropy_C, entropy_K
+    ConditionalEntropyResult
+        NamedTuple with ``joint_entropy``, ``class_given_cluster_entropy``,
+        ``cluster_given_class_entropy``, ``class_entropy``, and
+        ``cluster_entropy`` fields.
 
     Raises
     ------
@@ -88,7 +100,13 @@ def conditional_entropies(labels_true, labels_pred):
 
     entropy_CK = max(0, entropy_joint - entropy_K)
     entropy_KC = max(0, entropy_joint - entropy_C)
-    return entropy_joint, entropy_CK, entropy_KC, entropy_C, entropy_K
+    return ConditionalEntropyResult(
+        joint_entropy=entropy_joint,
+        class_given_cluster_entropy=entropy_CK,
+        cluster_given_class_entropy=entropy_KC,
+        class_entropy=entropy_C,
+        cluster_entropy=entropy_K,
+    )
 
 @validate_params(
     {
@@ -133,11 +151,11 @@ def homogeneity_score(labels_true, labels_pred):
     parsimony_score : Parsimony of clustering relative to class partition
     """
     _validate_clusterings(labels_true, labels_pred)
-    entropy_joint, entropy_CK, entropy_KC, entropy_C, entropy_K = conditional_entropies(labels_true, labels_pred)
+    entropies = conditional_entropies(labels_true, labels_pred)
 
-    if entropy_C == 0:
+    if entropies.class_entropy == 0:
         return 1.0
-    return 1-entropy_CK/entropy_C
+    return 1-entropies.class_given_cluster_entropy/entropies.class_entropy
 
 
 @validate_params(
@@ -188,11 +206,11 @@ def parsimony_score(labels_true, labels_pred):
         than its maximum over all possible clusterings.
     """
     _validate_clusterings(labels_true, labels_pred)
-    entropy_joint, entropy_CK, entropy_KC, entropy_C, entropy_K = conditional_entropies(labels_true, labels_pred)
-    denominator = np.log(len(labels_true))-entropy_C
+    entropies = conditional_entropies(labels_true, labels_pred)
+    denominator = np.log(len(labels_true))-entropies.class_entropy
     if denominator == 0:
         return 1.0
-    return 1-entropy_KC/denominator
+    return 1-entropies.cluster_given_class_entropy/denominator
 
 
 @validate_params(
@@ -239,10 +257,10 @@ def completeness_score(labels_true, labels_pred):
         which behaves more intuitively under refinement.
     """
     _validate_clusterings(labels_true, labels_pred)
-    entropy_joint, entropy_CK, entropy_KC, entropy_C, entropy_K = conditional_entropies(labels_true, labels_pred)
-    if entropy_K == 0:
+    entropies = conditional_entropies(labels_true, labels_pred)
+    if entropies.cluster_entropy == 0:
         return 1.0
-    return 1-entropy_KC/entropy_K
+    return 1-entropies.cluster_given_class_entropy/entropies.cluster_entropy
 
 @validate_params(
     {

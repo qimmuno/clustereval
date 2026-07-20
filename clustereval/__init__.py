@@ -10,6 +10,7 @@ from .core import (
     pair_sensitivity_score,
 	completeness_score,
 	conditional_entropies,
+    ConditionalEntropyResult,
 )
 
 from importlib.metadata import version
@@ -29,4 +30,5 @@ __all__ = [
     "pair_sensitivity_score",
 	"completeness_score",
 	"conditional_entropies",
+	"ConditionalEntropyResult",
 ]
