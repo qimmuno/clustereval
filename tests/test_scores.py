@@ -63,6 +63,20 @@ def test_singleton_clusters():
 
     assert q_measure_score(labels_true, labels_predicted) == pytest.approx(0.0)
 
+def test_fragmented_class():
+    labels_true = [1, 2, 3, 4]
+    labels_predicted = [0, 1, 2, 3]
+
+    assert homogeneity_score(labels_true, labels_predicted) == pytest.approx(1.0)
+    assert parsimony_score(labels_true, labels_predicted) == pytest.approx(1.0)
+
+    assert normalized_purity_score(labels_true, labels_predicted) == pytest.approx(1.0)
+    assert normalized_inverse_purity_score(labels_true, labels_predicted) == pytest.approx(1.0)
+
+    assert pair_specificity_score(labels_true, labels_predicted) == pytest.approx(1.0)
+    assert pair_sensitivity_score(labels_true, labels_predicted) == pytest.approx(1.0)
+
+    assert q_measure_score(labels_true, labels_predicted) == pytest.approx(1.0)
 
 def test_single_class_fragmented_clusters():
     labels_true = [1, 1, 1, 1]
@@ -78,7 +92,6 @@ def test_single_class_fragmented_clusters():
     assert pair_sensitivity_score(labels_true, labels_predicted) == pytest.approx(0.0)
 
     assert q_measure_score(labels_true, labels_predicted) == pytest.approx(0.0)
-
 
 def test_single_class_matching():
     labels_true = [1, 1, 1, 1]
@@ -97,7 +110,6 @@ def test_single_class_matching():
 
 def test_degenerate_input():
     # Test that degenerate input (empty lists) returns ValueError
-
     with pytest.raises(ValueError):
         homogeneity_score([], [])
     with pytest.raises(ValueError):

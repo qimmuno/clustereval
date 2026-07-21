@@ -562,4 +562,4 @@ def pair_sensitivity_score(labels_true, labels_pred):
     """
     _validate_clusterings(labels_true, labels_pred)
     (tn, fp), (fn, tp) = sklearn.metrics.cluster.pair_confusion_matrix(labels_true, labels_pred)
-    return tp / (tp + fn) if (tp + fn) > 0 else 0
+    return tp / (tp + fn) if (tp + fn) > 0 else 1.0
