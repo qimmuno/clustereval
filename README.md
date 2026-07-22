@@ -31,7 +31,14 @@ The package depends on `numpy` and `scikit-learn`.
 
 ## Documentation and examples
 
-API documentation is provided through docstrings. Jupyter example notebooks can be found in the `examples` folder.
+API documentation is provided through docstrings. 
+
+Jupyter example notebooks can be found in the `examples` folder:
+
+- [Homogeneity and parsimony](https://github.com/qimmuno/clustereval/blob/main/examples/01_homogeneity_parsimony.ipynb)
+- [Other trade-offs](https://github.com/qimmuno/clustereval/blob/main/examples/02_other_trade_offs.ipynb)
+- [Feature selection](https://github.com/qimmuno/clustereval/blob/main/examples/03_feature_selection.ipynb)
+- [Algorithm comparison](https://github.com/qimmuno/clustereval/blob/main/examples/04_algorithm_comparison.ipynb)
 
 You can create a local copy of the API documentation in the docs folder by running:
 
