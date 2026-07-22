@@ -17,7 +17,7 @@ The package also provides set-matching variants of the homogeneity and parsimony
 | Set-matching | Normalized Purity Score | Normalized Inverse Purity Score | min-Entropy |
 | Pair-counting | Pair Specificity | Pair Sensitivity | Collision Entropy |
 
-![Illustration of validation approaches](assets/illustration.svg)
+![Illustration of validation approaches](https://raw.githubusercontent.com/qimmuno/clustereval/main/assets/illustration.svg)
 
 All scores are implemented in a way that is compatible with evaluation metrics defined in [Scikit-learn](https://scikit-learn.org/stable/modules/clustering.html#clustering-evaluation)'s `sklearn.metrics` to allow easy replacement within existing pipelines.
 
